@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}{{ victim.full_name }} | Memorial Archive{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <h1 class="h3 mb-0">{{ victim.full_name }}</h1>
+        <span class="badge bg-secondary">{{ victim.get_verification_status_display }}</span>
+      </div>
+      {% if victim.native_name %}
+        <p class="text-muted">{{ victim.native_name }}</p>
+      {% endif %}
+
+      {% if victim.photos.exists %}
+        <div id="photoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for photo in victim.photos.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ photo.image.url }}" class="d-block w-100" alt="{{ victim.full_name }}" loading="lazy" />
+                {% if photo.caption %}
+                  <div class="carousel-caption d-none d-md-block">
+                    <p>{{ photo.caption }}</p>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      {% endif %}
+
+      <section class="mb-4">
+        <h2 class="h5">Biography</h2>
+        <p>{{ victim.biography|default:"Biography pending." }}</p>
+      </section>
+
+      <section class="mb-4">
+        <h2 class="h5">Sources</h2>
+        <ul class="list-group">
+          {% for source in victim.sources.all %}
+            <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+              <div>
+                <strong>{{ source.title }}</strong>
+                <div class="text-muted small">{{ source.publisher_name }}{% if source.publication_date %} · {{ source.publication_date }}{% endif %}</div>
+                {% if source.notes %}<div class="small">{{ source.notes }}</div>{% endif %}
+              </div>
+              <div class="d-flex flex-column align-items-md-end gap-2">
+                <span class="badge bg-tag">Credibility {{ source.credibility_score }}/5</span>
+                <a href="{{ source.url }}" class="text-decoration-none" target="_blank" rel="noopener">View source</a>
+              </div>
+            </li>
+          {% empty %}
+            <li class="list-group-item">Sources pending.</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Key facts</h2>
+          <dl class="row mb-0">
+            <dt class="col-5">City</dt>
+            <dd class="col-7">{{ victim.city_of_death }}</dd>
+            <dt class="col-5">Province/State</dt>
+            <dd class="col-7">{{ victim.province_or_state }}</dd>
+            <dt class="col-5">Country</dt>
+            <dd class="col-7">{{ victim.country }}</dd>
+            <dt class="col-5">Date of death</dt>
+            <dd class="col-7">{{ victim.date_of_death|default:"Unknown" }}</dd>
+            <dt class="col-5">Age</dt>
+            <dd class="col-7">{{ victim.age|default:"Unknown" }}</dd>
+            <dt class="col-5">Occupation</dt>
+            <dd class="col-7">{{ victim.occupation|default:"Unknown" }}</dd>
+            <dt class="col-5">Education</dt>
+            <dd class="col-7">{{ victim.education|default:"Unknown" }}</dd>
+            <dt class="col-5">Marital status</dt>
+            <dd class="col-7">{{ victim.marital_status|default:"Unknown" }}</dd>
+            <dt class="col-5">Children</dt>
+            <dd class="col-7">{{ victim.children_count|default:"Unknown" }}</dd>
+            <dt class="col-5">Confidence</dt>
+            <dd class="col-7">{{ victim.confidence_score }}/100</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Tags</h2>
+          <div class="d-flex flex-wrap gap-2">
+            {% for tag in victim.tags.all %}
+              <span class="badge bg-tag">{{ tag.name }}</span>
+            {% empty %}
+              <span class="text-muted">No tags</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Share or request correction</h2>
+          <div class="d-flex flex-column gap-2">
+            <a class="btn btn-outline-ink" href="https://twitter.com/intent/tweet?text={{ victim.full_name|urlencode }}">Share on X</a>
+            <a class="btn btn-outline-ink" href="mailto:?subject={{ victim.full_name|urlencode }}&body={{ request.build_absolute_uri }}">Share via email</a>
+            <a class="btn btn-ink" href="/submit/{{ victim.slug }}/">Report correction</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

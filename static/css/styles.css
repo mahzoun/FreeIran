@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap");
+
+:root {
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "Source Sans 3", sans-serif;
+  --ink: #0f1a20;
+  --ink-light: #3c4a55;
+  --surface: #f6f1ec;
+  --surface-alt: #ece4dc;
+  --accent: #a9553e;
+  --tag: #6f7d6b;
+  --nav-bg: #0f1a20;
+  --nav-border: #2c3a44;
+}
+
+html[data-theme="dark"] {
+  --ink: #f4f4f2;
+  --ink-light: #c0c4c8;
+  --surface: #121417;
+  --surface-alt: #1b1f24;
+  --accent: #e09a7d;
+  --tag: #8ea38a;
+  --nav-bg: #0b0d10;
+  --nav-border: #1f272e;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+}
+
+.bg-surface {
+  background: var(--surface);
+}
+
+.bg-surface-alt {
+  background: var(--surface-alt);
+}
+
+.bg-ink {
+  background: var(--ink);
+}
+
+.bg-nav {
+  background: var(--nav-bg);
+}
+
+.border-ink-light {
+  border-color: var(--ink-light) !important;
+}
+
+.border-nav {
+  border-color: var(--nav-border) !important;
+}
+
+.text-ink {
+  color: var(--ink) !important;
+}
+
+.btn-ink {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+.btn-ink:hover {
+  background: #bf684f;
+  color: #fff;
+}
+
+.btn-outline-ink {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btn-outline-ink:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.badge.bg-tag {
+  background: var(--tag);
+  color: #fff;
+}
+
+.hero {
+  background: linear-gradient(120deg, rgba(169, 85, 62, 0.18), rgba(240, 232, 222, 0.6));
+  padding: 4rem 0;
+}
+
+.info-panel {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] .info-panel {
+  background: rgba(18, 20, 23, 0.85);
+}
+
+.filter-panel {
+  background: var(--surface-alt);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.placeholder-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-alt);
+  color: var(--ink-light);
+  height: 220px;
+}
+
+.card {
+  border: none;
+  border-radius: 18px;
+}
+
+.card img {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 8px;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 8px 12px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+.form-control,
+.form-select,
+textarea {
+  border-radius: 10px;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 2.5rem 0;
+  }
+}

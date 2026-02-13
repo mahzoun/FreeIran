@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Memorial Archive{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1 class="display-5 fw-semibold">A respectful memorial and documentation archive.</h1>
+        <p class="lead text-muted">We honor lives lost during protests with care, accuracy, and transparent sources. Every profile is a commitment to dignity and truth.</p>
+        <form class="d-flex gap-2" action="/victims/" method="get" role="search">
+          <input class="form-control form-control-lg" type="search" name="q" placeholder="Search names or stories" aria-label="Search" data-autocomplete list="search-suggestions" />
+          <button class="btn btn-ink" type="submit">Search</button>
+        </form>
+        <div class="mt-3 text-muted">Verified profiles: <strong>{{ verified_count }}</strong></div>
+      </div>
+      <div class="col-lg-5">
+        <div class="info-panel">
+          <h2 class="h5">How this archive works</h2>
+          <p class="mb-2">We document each life with sources, verification status, and a clear record of updates.</p>
+          <ul class="list-unstyled mb-0">
+            <li>Multiple sources per profile</li>
+            <li>Clear verification labels</li>
+            <li>Respect for family privacy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 mb-0">Recent additions</h2>
+      <a class="text-decoration-none" href="/victims/">View all</a>
+    </div>
+    <div class="row g-4">
+      {% for victim in recent %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            {% if victim.photos.first %}
+              <img src="{{ victim.photos.first.image.url }}" class="card-img-top" alt="{{ victim.full_name }}" loading="lazy" />
+            {% else %}
+              <div class="placeholder-img">No photo available</div>
+            {% endif %}
+            <div class="card-body">
+              <h3 class="h5">{{ victim.full_name }}</h3>
+              <p class="text-muted small">{{ victim.city_of_death }}, {{ victim.country }}</p>
+              <p class="card-text">{{ victim.short_summary|default:"Profile pending" }}</p>
+              <span class="badge bg-secondary">{{ victim.get_verification_status_display }}</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+              <a class="btn btn-outline-ink w-100" href="/victims/{{ victim.slug }}/">View profile</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No entries yet. Start by adding verified profiles through the admin dashboard.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-surface-alt">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <h2 class="h4">About this memorial</h2>
+        <p>This archive is a living record. Every update is logged, every source is visible, and unverified information is clearly labeled.</p>
+      </div>
+      <div class="col-md-6">
+        <h2 class="h4">Ethical commitments</h2>
+        <p>We respect the privacy of families, provide clear correction paths, and remove content when requested. Transparency is central to this work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

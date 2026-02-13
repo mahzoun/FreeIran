@@ -1,0 +1,5 @@
+pytest>=8.2
+pytest-django>=4.8
+ruff>=0.6
+black>=24.4
+isort>=5.13

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Victims | Memorial Archive{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-4 gap-3">
+    <div>
+      <h1 class="h3 mb-1">Victim Directory</h1>
+      <p class="text-muted mb-0">Search, filter, and sort profiles. Verification status appears on every card.</p>
+    </div>
+    <form class="d-flex gap-2" action="/victims/" method="get" role="search">
+      <input class="form-control" type="search" name="q" placeholder="Search names or stories" value="{{ form.q.value|default:'' }}" data-autocomplete list="search-suggestions" />
+      <button class="btn btn-ink" type="submit">Search</button>
+    </form>
+  </div>
+
+  <form class="filter-panel" method="get">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">City</label>
+        {{ form.city }}
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Age min</label>
+        {{ form.age_min }}
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Age max</label>
+        {{ form.age_max }}
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Verification</label>
+        {{ form.verification_status }}
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Tag</label>
+        <select class="form-select" name="tag">
+          <option value="">All</option>
+          {% for tag in tags %}
+            <option value="{{ tag.slug }}" {% if form.tag.value == tag.slug %}selected{% endif %}>{{ tag.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Sort</label>
+        {{ form.sort }}
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-outline-ink w-100" type="submit">Apply filters</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="row g-4 mt-3">
+    {% for victim in page_obj %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          {% if victim.photos.first %}
+            <img src="{{ victim.photos.first.image.url }}" class="card-img-top" alt="{{ victim.full_name }}" loading="lazy" />
+          {% else %}
+            <div class="placeholder-img">No photo available</div>
+          {% endif %}
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="h5 mb-0">{{ victim.full_name }}</h3>
+              <span class="badge bg-secondary">{{ victim.get_verification_status_display }}</span>
+            </div>
+            <p class="text-muted small">{{ victim.city_of_death }}, {{ victim.country }}</p>
+            <p class="card-text">{{ victim.short_summary|default:"Profile pending" }}</p>
+            <div class="d-flex flex-wrap gap-2">
+              {% for tag in victim.tags.all %}
+                <span class="badge bg-tag">{{ tag.name }}</span>
+              {% empty %}
+                <span class="text-muted small">No tags</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="card-footer bg-transparent border-0">
+            <a class="btn btn-outline-ink w-100" href="/victims/{{ victim.slug }}/">View profile</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">No results found. Try widening your filters.</p>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="mt-4" aria-label="Victim pagination">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+{% endblock %}
